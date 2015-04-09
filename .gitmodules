@@ -1,0 +1,8 @@
+[submodule "nui"]
+	path = nui
+	url = https://github.com/shileiyu/nui.git
+	branch = master
+[submodule "ncore"]
+	path = ncore
+	url = https://github.com/shileiyu/ncore.git
+	branch = master
