@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "maku_ui", "maku_ui.vcxproj", "{DDA1B7CF-864D-4294-8D60-5701EA4074C4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nui", "nui\nui.vcxproj", "{1EEFD916-2FCB-48F0-A559-4F0E61DDE830}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ncore", "ncore\ncore.vcxproj", "{4E2AA223-399C-4386-9DEE-FCEF2CAAADFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "maku", "maku", "{4C360750-732E-4346-A28A-91A77DD78387}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "maku_render", "maku_render.vcxproj", "{821D91F4-B562-478B-90E3-0DB7C7F48216}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DDA1B7CF-864D-4294-8D60-5701EA4074C4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DDA1B7CF-864D-4294-8D60-5701EA4074C4}.Debug|Win32.Build.0 = Debug|Win32
+		{DDA1B7CF-864D-4294-8D60-5701EA4074C4}.Release|Win32.ActiveCfg = Release|Win32
+		{DDA1B7CF-864D-4294-8D60-5701EA4074C4}.Release|Win32.Build.0 = Release|Win32
+		{1EEFD916-2FCB-48F0-A559-4F0E61DDE830}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1EEFD916-2FCB-48F0-A559-4F0E61DDE830}.Debug|Win32.Build.0 = Debug|Win32
+		{1EEFD916-2FCB-48F0-A559-4F0E61DDE830}.Release|Win32.ActiveCfg = Release|Win32
+		{1EEFD916-2FCB-48F0-A559-4F0E61DDE830}.Release|Win32.Build.0 = Release|Win32
+		{4E2AA223-399C-4386-9DEE-FCEF2CAAADFF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4E2AA223-399C-4386-9DEE-FCEF2CAAADFF}.Debug|Win32.Build.0 = Debug|Win32
+		{4E2AA223-399C-4386-9DEE-FCEF2CAAADFF}.Release|Win32.ActiveCfg = Release|Win32
+		{4E2AA223-399C-4386-9DEE-FCEF2CAAADFF}.Release|Win32.Build.0 = Release|Win32
+		{821D91F4-B562-478B-90E3-0DB7C7F48216}.Debug|Win32.ActiveCfg = Debug|Win32
+		{821D91F4-B562-478B-90E3-0DB7C7F48216}.Debug|Win32.Build.0 = Debug|Win32
+		{821D91F4-B562-478B-90E3-0DB7C7F48216}.Release|Win32.ActiveCfg = Release|Win32
+		{821D91F4-B562-478B-90E3-0DB7C7F48216}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DDA1B7CF-864D-4294-8D60-5701EA4074C4} = {4C360750-732E-4346-A28A-91A77DD78387}
+		{821D91F4-B562-478B-90E3-0DB7C7F48216} = {4C360750-732E-4346-A28A-91A77DD78387}
+	EndGlobalSection
+EndGlobal

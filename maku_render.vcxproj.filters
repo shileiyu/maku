@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{24c0a84e-c804-44a3-af1e-bad2d144d515}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="base">
+      <UniqueIdentifier>{5d23a6d9-ee92-409b-800f-2228ce773962}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="detours">
+      <UniqueIdentifier>{e2644c0b-b384-4a44-8789-7ff391dc90f2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers">
+      <UniqueIdentifier>{f473d6b3-63a9-46c6-8c79-6613fe9c9816}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\shaders">
+      <UniqueIdentifier>{f68cc0dc-b789-43c8-ad34-7dbda7111a7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="context">
+      <UniqueIdentifier>{d41ce926-0eac-4e8e-8d55-56c9c47c534a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\kernel32">
+      <UniqueIdentifier>{32f05379-a8b9-4383-8f88-e9ccb1969d3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\user32">
+      <UniqueIdentifier>{5b896294-dfdb-4d9a-9326-255b00e17c3c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\input">
+      <UniqueIdentifier>{ffd35273-fe65-4e4c-86d7-04c88d387b0f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\dinput">
+      <UniqueIdentifier>{f505a22d-0408-47b9-bea8-d18723941acd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="maku\common\key_event.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\common\mouse_event.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\common\pipe_msg_def.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\canvas.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\geometry.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\utils.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\detours\detours.h">
+      <Filter>detours</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\detours\detours_ext.h">
+      <Filter>detours</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\kernel32_hooker.h">
+      <Filter>hookers\kernel32</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\user32_hooker.h">
+      <Filter>hookers\user32</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\input_hooker.h">
+      <Filter>hookers\input</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\dinput_common.h">
+      <Filter>hookers\dinput</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\dinput_hooker.h">
+      <Filter>hookers\dinput</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\render_context.h">
+      <Filter>context</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="maku\render\geometry.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\utils.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\detours\detours.cpp">
+      <Filter>detours</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\detours\detours_ext.cpp">
+      <Filter>detours</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\detours\disasm.cpp">
+      <Filter>detours</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\main.cpp" />
+    <ClCompile Include="maku\render\kernel32_hooker.cpp">
+      <Filter>hookers\kernel32</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\user32_hooker.cpp">
+      <Filter>hookers\user32</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\input_hooker.cpp">
+      <Filter>hookers\input</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\dinput_hooker.cpp">
+      <Filter>hookers\dinput</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\render_context.cpp">
+      <Filter>context</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
