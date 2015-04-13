@@ -22,6 +22,8 @@ public:
 public:
     bool IsPresent();            //是否呼出overlay
 
+    void SetWorkDirectory(const char * work_dir);
+
     void UpdateStatus(uint32_t width, uint32_t height);
 
     void Draw(Canvas * canvas);
@@ -80,6 +82,7 @@ private:
     ncore::SpinLock locker_;
     std::shared_ptr<ncore::NamedPipeServer> pipe_obj_;
     MsgHandle msg_handle_[kMsgCount];
+    std::string work_dir_;
 };
     }
 }

@@ -242,7 +242,6 @@ bool RenderContext::IsSkip()
 
 bool RenderContext::StartRenderUIProcess()
 {
-    assert(0);
     using namespace ncore;
 
     ExitRenderUIProcess();
@@ -252,20 +251,11 @@ bool RenderContext::StartRenderUIProcess()
     if( !InitializePipe() )//初始化管道
         return false;
 
-    Registry reg;
-    if(!reg.Open("maybe unknown", "r"))
-        return false;
-    std::string valuepath8;
-    reg.Read("ContentPath", valuepath8);
-    reg.Close();
-    if(valuepath8.empty())
-        return false;
-
-    const char * parts[] = {valuepath8.data(), "maku_ui.exe"};
+    const char * parts[] = {work_dir_.data(), "maku_ui.exe"};
     auto ui_path8 = Path::JoinPath(parts);
     auto ui_path = Karma::FromUTF8(ui_path8);					
 
-    auto value_path = Karma::FromUTF8(valuepath8);
+    auto value_path = Karma::FromUTF8(work_dir_);
     PROCESS_INFORMATION processInfo;
     STARTUPINFO startUpInfo;
     memset(&processInfo, 0, sizeof(PROCESS_INFORMATION));
@@ -496,6 +486,12 @@ void RenderContext::UpdateStatus(uint32_t width, uint32_t height)
 bool RenderContext::IsPresent()
 {
     return show_;
+}
+
+void RenderContext::SetWorkDirectory(const char * work_dir)
+{
+    if (work_dir)
+        work_dir_ = work_dir;
 }
 
 

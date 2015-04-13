@@ -31,6 +31,30 @@
     <Filter Include="hookers\dinput">
       <UniqueIdentifier>{f505a22d-0408-47b9-bea8-d18723941acd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="hookers\d3d9">
+      <UniqueIdentifier>{32114c87-a618-4b78-8d6c-2545175aa022}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\dxgi">
+      <UniqueIdentifier>{3d72a79a-badc-4de8-b910-9b5c264a37f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\dxgi\d3d10">
+      <UniqueIdentifier>{a356eb4c-d265-49b6-9af7-7090d6eb7f9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\dxgi\d3d11">
+      <UniqueIdentifier>{accb0f67-fa2a-4b93-98b9-074e110c9a47}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\opengl">
+      <UniqueIdentifier>{b8f5ad95-d0cc-4ca6-89ab-53116e50c671}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\ddraw">
+      <UniqueIdentifier>{7ed63417-9823-4c95-9773-ef50f441870e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\ddraw\d3d7">
+      <UniqueIdentifier>{161913a7-45bd-480f-b301-b3f58f7ed836}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hookers\ddraw\gdi">
+      <UniqueIdentifier>{1c0454c2-03ab-42f7-a7e5-c3c974d8d1c6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="maku\common\key_event.h">
@@ -75,6 +99,54 @@
     <ClInclude Include="maku\render\render_context.h">
       <Filter>context</Filter>
     </ClInclude>
+    <ClInclude Include="maku\render\d3dx_shader.h">
+      <Filter>hookers\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\opengl_shader.h">
+      <Filter>hookers\shaders</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\opengl_canvas.h">
+      <Filter>hookers\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\opengl_common.h">
+      <Filter>hookers\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\opengl_hooker.h">
+      <Filter>hookers\opengl</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\d3d9_canvas.h">
+      <Filter>hookers\d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\d3d9_common.h">
+      <Filter>hookers\d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\d3d9_hooker.h">
+      <Filter>hookers\d3d9</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\d3d10_canvas.h">
+      <Filter>hookers\dxgi\d3d10</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\d3d11_canvas.h">
+      <Filter>hookers\dxgi\d3d11</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\dxgi_common.h">
+      <Filter>hookers\dxgi</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\dxgi_hooker.h">
+      <Filter>hookers\dxgi</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\d3d7_canvas.h">
+      <Filter>hookers\ddraw\d3d7</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\gdi_canvas.h">
+      <Filter>hookers\ddraw\gdi</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\ddraw_common.h">
+      <Filter>hookers\ddraw</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\render\ddraw_hooker.h">
+      <Filter>hookers\ddraw</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="maku\render\geometry.cpp">
@@ -107,6 +179,36 @@
     </ClCompile>
     <ClCompile Include="maku\render\render_context.cpp">
       <Filter>context</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\opengl_canvas.cpp">
+      <Filter>hookers\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\opengl_hooker.cpp">
+      <Filter>hookers\opengl</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\d3d9_canvas.cpp">
+      <Filter>hookers\d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\d3d9_hooker.cpp">
+      <Filter>hookers\d3d9</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\d3d10_canvas.cpp">
+      <Filter>hookers\dxgi\d3d10</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\d3d11_canvas.cpp">
+      <Filter>hookers\dxgi\d3d11</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\dxgi_hooker.cpp">
+      <Filter>hookers\dxgi</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\d3d7_canvas.cpp">
+      <Filter>hookers\ddraw\d3d7</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\gdi_canvas.cpp">
+      <Filter>hookers\ddraw\gdi</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\render\ddraw_hooker.cpp">
+      <Filter>hookers\ddraw</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
