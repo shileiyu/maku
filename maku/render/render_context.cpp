@@ -19,8 +19,7 @@ const int kSize = 30;
 const uint32_t max_skip_frame_count = 200;
 const uint32_t kPipeReadBufSize = 2 * 1024 * 1024;
 const uint32_t kPipeWriteBufSize = 16 * 1024 * 1024;
-const char * kPipeFlagStr = 
-    "\\\\.\\pipe\\maku_render_pipe_";
+
 RenderContext * render_context2_ = NULL;
 
 RenderContext::RenderContext(void)
@@ -290,7 +289,7 @@ bool RenderContext::InitializePipe()
     device_flag_ = ::GetTickCount();
     bool bret = false;
     char name[MAX_PATH];
-    sprintf_s(name, "%s%u", kPipeFlagStr, device_flag_);
+    sprintf_s(name, "%s%u", kPipeName, device_flag_);
 
 	return pipe_obj_->init(name, ncore::PipeDirection::kDuplex,
 		ncore::PipeOption::kNone,

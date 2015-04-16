@@ -1,7 +1,7 @@
 ﻿#ifndef MAKU_COMMON_RENDER_MSG_DEF_H_
 #define MAKU_COMMON_RENDER_MSG_DEF_H_
 
-#include <ncore/ncore.h>
+#include <stdint.h>
 
 #pragma pack(push)
 #pragma pack(1)
@@ -9,6 +9,7 @@
 namespace maku
 {
 
+static const char * kPipeName = "\\\\.\\pipe\\maku_render_pipe_";
 
 enum MsgType
 {

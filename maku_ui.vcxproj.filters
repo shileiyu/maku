@@ -1,2 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="maku\ui\main.cpp" />
+    <ClCompile Include="maku\ui\backroom.cpp" />
+    <ClCompile Include="maku\ui\pipe_shell.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="maku\ui\backroom.h" />
+    <ClInclude Include="maku\ui\pipe_shell.h" />
+  </ItemGroup>
+</Project>

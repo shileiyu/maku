@@ -41,6 +41,9 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(SolutionDir)maku;$(SolutionDir)nui;$(SolutionDir)ncore;$(IncludePath)</IncludePath>
+    <OutDir>out\$(Configuration)\</OutDir>
+    <IntDir>build\maku_ui\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -76,6 +79,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="maku\ui\main.cpp" />
+    <ClCompile Include="maku\ui\backroom.cpp" />
+    <ClCompile Include="maku\ui\pipe_shell.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="maku\ui\backroom.h" />
+    <ClInclude Include="maku\ui\pipe_shell.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="ncore\ncore.vcxproj">
+      <Project>{4e2aa223-399c-4386-9dee-fcef2caaadff}</Project>
+    </ProjectReference>
+    <ProjectReference Include="nui\nui.vcxproj">
+      <Project>{1eefd916-2fcb-48f0-a559-4f0e61dde830}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
