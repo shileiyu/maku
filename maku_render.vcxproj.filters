@@ -147,6 +147,9 @@
     <ClInclude Include="maku\render\ddraw_hooker.h">
       <Filter>hookers\ddraw</Filter>
     </ClInclude>
+    <ClInclude Include="maku\common\pipe_shell.h">
+      <Filter>common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="maku\render\geometry.cpp">
@@ -209,6 +212,9 @@
     </ClCompile>
     <ClCompile Include="maku\render\ddraw_hooker.cpp">
       <Filter>hookers\ddraw</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\common\pipe_shell.cpp">
+      <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

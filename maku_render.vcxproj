@@ -42,8 +42,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(SolutionDir)ncore;$(IncludePath)</IncludePath>
-    <IntDir>build\maku_render\$(Configuration)\</IntDir>
-    <OutDir>out\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)build\maku_render\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)out\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -83,6 +83,7 @@
     <ClInclude Include="maku\common\key_event.h" />
     <ClInclude Include="maku\common\mouse_event.h" />
     <ClInclude Include="maku\common\pipe_msg_def.h" />
+    <ClInclude Include="maku\common\pipe_shell.h" />
     <ClInclude Include="maku\render\canvas.h" />
     <ClInclude Include="maku\render\d3d10_canvas.h" />
     <ClInclude Include="maku\render\d3d11_canvas.h" />
@@ -112,6 +113,7 @@
     <ClInclude Include="maku\render\utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="maku\common\pipe_shell.cpp" />
     <ClCompile Include="maku\render\d3d10_canvas.cpp" />
     <ClCompile Include="maku\render\d3d11_canvas.cpp" />
     <ClCompile Include="maku\render\d3d7_canvas.cpp" />

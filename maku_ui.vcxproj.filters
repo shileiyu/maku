@@ -3,10 +3,30 @@
   <ItemGroup>
     <ClCompile Include="maku\ui\main.cpp" />
     <ClCompile Include="maku\ui\backroom.cpp" />
-    <ClCompile Include="maku\ui\pipe_shell.cpp" />
+    <ClCompile Include="maku\common\pipe_shell.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="maku\ui\pipe_agent.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="maku\ui\backroom.h" />
-    <ClInclude Include="maku\ui\pipe_shell.h" />
+    <ClInclude Include="maku\common\key_event.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\common\mouse_event.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\common\pipe_msg_def.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\common\pipe_shell.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="maku\ui\pipe_agent.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="common">
+      <UniqueIdentifier>{8dccfa8c-7559-4fcc-acdb-2d99aec7fbb0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

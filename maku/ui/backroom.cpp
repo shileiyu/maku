@@ -1,6 +1,8 @@
 ﻿#include "backroom.h"
+#include "pipe_agent.h"
 #include <ncore/utils/karma.h>
 #include <ncore/sys/options_parser.h>
+#include <nui/base/pixpainter.h>
 
 namespace maku
 {
@@ -33,7 +35,6 @@ Backroom * Backroom::Get()
 }
 
 Backroom::Backroom()
-:show_(false)
 {
     ;
 }
@@ -52,30 +53,84 @@ ErrorCode Backroom::Run()
     auto cmdline = Karma::ToUTF8(::GetCommandLine());
     OptionsParser options_parser(cmdline);
     auto options = options_parser.GetOptions();
-    show_ = options.HasOption("show");
     int width = ParseInteger(options["width"], 800);
     int height = ParseInteger(options["height"], 600);
+    int flag = ParseInteger(options["flag"], 0);
 
     //nui initialize
     //SkGraphics::Init()
-
-    if (show_)
-    {//创建窗口 并显示
-        ;
+    //初始化自身
+    error_code = kGeneralFailure;
+    if (InitView(width, height))
+    {
+        //初始化管道通信
+        error_code = kErrorPipe;
+        if (PipeAgent::Get()->init(flag))
+        {//管道初始化成功
+            using namespace ncore;
+            MessageLoop::Current()->AddObserver(this);
+            MessageLoop::Current()->Run();
+            MessageLoop::Current()->RemoveObserver(this);
+            PipeAgent::Get()->fini();
+        }
+        FiniView();
     }
-    //初始化管道通信
-    
-
-
-    //消息循环
-
-
-    //消息循环结束
     //nui uninitialize
     //SkGraphics::Term();
-
-
     return error_code;
+}
+
+uint32_t Backroom::OnIdle(ncore::MessageLoop & loop)
+{
+    using namespace ncore;
+    //接收管道消息
+    if (!PipeAgent::Get()->Update())
+        MessageLoop::Current()->Exit(kErrorPipe);
+
+    PushPixmap();
+    return 30;
+}
+
+void Backroom::PenddingRedraw(nui::ScopedWorld world, const nui::Rect & rect)
+{
+    inval_rect_.Union(rect);
+}
+
+void Backroom::SetCursor(nui::ScopedWorld world, nui::CursorStyles cursor)
+{
+    ;
+}
+
+bool Backroom::InitView(int width, int height)
+{
+    using namespace nui;
+    using namespace ncore;
+    world_ = new GadgetWorld(this);
+    back_buffer_ = Pixmap::Alloc(Size::Make(width, height));
+    raw_buffer_ = new Buffer();
+    //初始化其他View
+    assert(0);
+    //layout
+    return world_ != nullptr && back_buffer_.IsEmpty();
+}
+
+void Backroom::FiniView()
+{
+    using namespace nui;
+    delete raw_buffer_;
+    back_buffer_ = Pixmap();
+    world_.Reset();
+}
+
+void Backroom::PushPixmap()
+{
+    using namespace nui;
+    if (inval_rect_.isEmpty())
+        return;
+    PixPainter painter(back_buffer_);
+    world_->Draw(painter, inval_rect_);
+    
+    inval_rect_.SetEmpty();
 }
 
 }

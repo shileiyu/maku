@@ -58,21 +58,21 @@ struct PipeTextEvent
     wchar_t text;
 };
 
-struct StatusChangedEvent
+struct PipeStatusChangedEvent
 {
     uint32_t show : 1;          //控制是否绘制UI
     uint32_t shield : 1;        //控制鼠标键盘是否路由给游戏中(popup-window时shield=0)
 };
 
 //仅在光标样式改变后才发送该事件
-struct CursorChangedEvent
+struct PipeCursorChangedEvent
 {
     int32_t xhotspot;
     int32_t yhotspot;
     uint32_t pixel[32][32];//光标是32 * 32
 };
 
-struct PaintEvent
+struct PipePaintEvent
 {
     uint16_t left;    //绘图脏矩形参数(需要重绘)
     uint16_t top;     //绘图脏矩形参数(需要重绘)

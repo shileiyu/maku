@@ -60,7 +60,7 @@ void RenderContext::Draw(Canvas * canvas)
 
     if(shield_)
     {//绘制光标
-        CursorChangedEvent * e = (CursorChangedEvent *)cursor_buf_.data();
+        PipeCursorChangedEvent * e = (PipeCursorChangedEvent *)cursor_buf_.data();
 
         bmp_info.bits = cursor_buf_.data();
         bmp_info.width = 32;
@@ -263,7 +263,7 @@ bool RenderContext::StartRenderUIProcess()
     startUpInfo.dwFlags = STARTF_USESHOWWINDOW;
     startUpInfo.wShowWindow = SW_HIDE;
 
-    auto cmd_line8 = Karma::Format("-id=%u -width=%d -height=%d", 
+    auto cmd_line8 = Karma::Format("-flag=%u -width=%d -height=%d", 
                                    device_flag_, width_, height_);
     auto cmd_line16 = Karma::FromUTF8(cmd_line8);
     wchar_t cmd_line[256] = {0};
@@ -394,11 +394,11 @@ void RenderContext::HandleRecvFail()
 void RenderContext::OnStatusChangedEvent()
 {
     uint32_t transfer = 0;
-    uint32_t size = sizeof(StatusChangedEvent);
+    uint32_t size = sizeof(PipeStatusChangedEvent);
 	ncore::Buffer recv_buf(size);
     pipe_obj_->Read(recv_buf.data(), size, transfer);
-    const StatusChangedEvent * sc = 
-        reinterpret_cast<StatusChangedEvent*>(recv_buf.data());
+    const PipeStatusChangedEvent * sc =
+        reinterpret_cast<PipeStatusChangedEvent*>(recv_buf.data());
 
     show_ = sc->show;
     shield_ = sc->shield;
@@ -419,10 +419,10 @@ void RenderContext::OnCursorChangedEvent()
 void RenderContext::OnPaintEvent()
 {
     uint32_t transfer = 0;
-	ncore::FixedBuffer<sizeof(PaintEvent)> recv_buf;
+    ncore::FixedBuffer<sizeof(PipePaintEvent)> recv_buf;
     pipe_obj_->Read(recv_buf.data(), recv_buf.capacity(), transfer);
-    const PaintEvent * pe = 
-        reinterpret_cast<PaintEvent*>(recv_buf.data());
+    const PipePaintEvent * pe =
+        reinterpret_cast<PipePaintEvent*>(recv_buf.data());
 
 	ncore::Buffer data_buffer(pe->width * 4);
     uint32_t dst_pitch = width_ * 4;
