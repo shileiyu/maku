@@ -1,9 +1,13 @@
 ﻿
-#include <ncore/ncore.h>
+#include <ncore/utils/karma.h>
 #include "kernel32_hooker.h"
 #include "user32_hooker.h"
 #include "input_hooker.h"
 #include "dinput_hooker.h"
+#include "dxgi_hooker.h"
+#include "d3d9_hooker.h"
+#include "ddraw_hooker.h"
+#include "opengl_hooker.h"
 #include "render_context.h"
 
 void HookUp();
@@ -31,10 +35,16 @@ void HookUp()
     Kernel32Hooker::Hook();
     User32Hooker::Hook();
     InputHooker::Hook();
+    DXGIHooker::Hook();
+    D3D9Hooker::Hook();
+    DDrawHooker::Hook();
+    DinputHooker::Hook();
+    OpenGLHooker::Hook();
 }
 
-extern "C" __declspec(dllexport) void __stdcall SetWorkDirectory(const char * work_dir_utf8)
+extern "C" __declspec(dllexport) void __cdecl SetWorkDirectory(const wchar_t * work_dir)
 {
     using namespace maku::render;
-    RenderContext::Get()->SetWorkDirectory(work_dir_utf8);
+    
+    RenderContext::Get()->SetWorkDirectory(ncore::Karma::ToUTF8(work_dir).data());
 }

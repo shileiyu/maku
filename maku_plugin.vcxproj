@@ -11,19 +11,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DDA1B7CF-864D-4294-8D60-5701EA4074C4}</ProjectGuid>
+    <ProjectGuid>{EF5D6A1B-720A-40BC-8B2C-D5894E35C1A1}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>maku_ui</RootNamespace>
+    <RootNamespace>maku_plugin</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -41,9 +41,10 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)maku;$(SolutionDir)ncore;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)out\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)build\maku_ui\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)build\maku_plugin\$(Configuration)\</IntDir>
+    <IncludePath>$(SolutionDir)ncore;$(SolutionDir)maku;$(SolutionDir)nui;$(IncludePath)</IncludePath>
+    <TargetExt>.pv</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -54,11 +55,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;MAKU_PLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>usp10.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -69,32 +73,32 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;MAKU_PLUGIN_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <ModuleDefinitionFile>plugin.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="maku\common\pipe_shell.cpp" />
-    <ClCompile Include="maku\ui\main.cpp" />
-    <ClCompile Include="maku\ui\backroom.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="maku\common\key_event.h" />
-    <ClInclude Include="maku\common\mouse_event.h" />
-    <ClInclude Include="maku\common\pipe_msg_def.h" />
-    <ClInclude Include="maku\common\pipe_shell.h" />
-    <ClInclude Include="maku\ui\backroom.h" />
-    <ClInclude Include="maku\ui\plugin.h" />
+    <ClCompile Include="maku\plugin\demo.cpp" />
+    <ClCompile Include="maku\plugin\main.cpp" />
+    <ClCompile Include="maku\plugin\welcome.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="ncore\ncore.vcxproj">
       <Project>{4e2aa223-399c-4386-9dee-fcef2caaadff}</Project>
     </ProjectReference>
+    <ProjectReference Include="nui\nui.vcxproj">
+      <Project>{1eefd916-2fcb-48f0-a559-4f0e61dde830}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="maku\plugin\demo.h" />
+    <ClInclude Include="maku\plugin\welcome.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

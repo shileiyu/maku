@@ -4,12 +4,12 @@
 #include "kernel32_hooker.h"
 #include "detours\detours.h"
 #include "detours\detours_ext.h"
-//#include "ddraw_hooker.h"
+#include "ddraw_hooker.h"
 //#include "d3d8_hooker.h"
-//#include "d3d9_hooker.h"
-//#include "dxgi_hooker.h"
+#include "d3d9_hooker.h"
+#include "dxgi_hooker.h"
 #include "dinput_hooker.h"
-//#include "opengl_hooker.h"
+#include "opengl_hooker.h"
 
 namespace maku
 {
@@ -37,12 +37,12 @@ HMODULE WINAPI FLoadLibraryExW(
     if(TLoadLibraryExW)
     {
         curr_mod = TLoadLibraryExW(lpLibFileName, hFile, dwFlags);
-        //DXGIHooker::Hook();
+        DXGIHooker::Hook();
         DinputHooker::Hook();
-        //D3D9Hooker::Hook();
+        D3D9Hooker::Hook();
         //D3D8Hooker::Hook();
-        //DDrawHooker::Hook();
-        //OpenGLHooker::Hook();
+        DDrawHooker::Hook();
+        OpenGLHooker::Hook();
     }
     return curr_mod;
 }

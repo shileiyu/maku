@@ -1,8 +1,8 @@
 ﻿#include "backroom.h"
-#include "pipe_agent.h"
 #include <ncore/utils/karma.h>
 #include <ncore/sys/options_parser.h>
-#include <nui/base/pixpainter.h>
+#include <ncore/sys/named_pipe.h>
+#include <ncore/base/buffer.h>
 
 namespace maku
 {
@@ -35,6 +35,7 @@ Backroom * Backroom::Get()
 }
 
 Backroom::Backroom()
+:client_(0), width_(0), height_(0), cache_(0)
 {
     ;
 }
@@ -44,93 +45,174 @@ Backroom::~Backroom()
     ;
 }
 
+
 ErrorCode Backroom::Run()
 {
     using namespace ncore;
-
-    auto error_code = kErrorSuccess;
-    
     auto cmdline = Karma::ToUTF8(::GetCommandLine());
     OptionsParser options_parser(cmdline);
     auto options = options_parser.GetOptions();
-    int width = ParseInteger(options["width"], 800);
-    int height = ParseInteger(options["height"], 600);
+    width_ = ParseInteger(options["width"], 800);
+    height_ = ParseInteger(options["height"], 600);
     int flag = ParseInteger(options["flag"], 0);
 
     //nui initialize
     //SkGraphics::Init()
-    //初始化自身
-    error_code = kGeneralFailure;
-    if (InitView(width, height))
-    {
-        //初始化管道通信
-        error_code = kErrorPipe;
-        if (PipeAgent::Get()->init(flag))
-        {//管道初始化成功
-            using namespace ncore;
-            MessageLoop::Current()->AddObserver(this);
-            MessageLoop::Current()->Run();
-            MessageLoop::Current()->RemoveObserver(this);
-            PipeAgent::Get()->fini();
-        }
-        FiniView();
-    }
+    //初始化管道通信
+    char pipename[MAX_PATH] = { 0 };
+    sprintf_s(pipename, "%s%u", kPipeName, flag);
+    pipe_obj_ = client_ = new NamedPipeClient;
+    if (!client_->init(pipename, PipeDirection::kDuplex, PipeOption::kNone, 0))
+        return kErrorPipe;
+    LoadPlugin();
+
+    MessageLoop::Current()->AddObserver(this);
+    MessageLoop::Current()->Run();
+    MessageLoop::Current()->RemoveObserver(this);
+
+    UnloadPlugin();
+    client_->fini();
+    delete client_;
+    pipe_obj_ = client_ = nullptr;
     //nui uninitialize
     //SkGraphics::Term();
-    return error_code;
+    return ErrorCode::kErrorSuccess;
+}
+
+bool Backroom::Update()
+{
+    Error e = kErrorSuccess;
+
+    while (kErrorSuccess == (e = Pull()));
+
+    return e == kErrorEmpty;
+}
+
+void Backroom::LoadPlugin()
+{
+    WIN32_FIND_DATA fd;
+    HANDLE file = ::FindFirstFile(L"*.pv", &fd);
+    if (INVALID_HANDLE_VALUE == file)
+        return;
+    do
+    {
+        if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
+        {
+            ModuleInfo info;
+            info.module = LoadLibrary(fd.cFileName);
+            info.load = (CF)GetProcAddress(info.module, "Load");
+            info.unload = (CF)GetProcAddress(info.module, "Unload");
+            if (info.module && info.load && info.unload)
+                infos_.push_back(info);
+        }
+
+    } while (::FindNextFile(file, &fd));
+
+    for (auto iter = infos_.begin(); iter != infos_.end(); ++iter)
+    {
+        iter->load(*this);
+    }
+}
+
+void Backroom::UnloadPlugin()
+{
+    for (auto iter = infos_.begin(); iter != infos_.end(); ++iter)
+    {
+        iter->unload(*this);
+        FreeLibrary(iter->module);
+    }
+    infos_.clear();
+}
+
+void Backroom::Show(bool b)
+{
+    ;
+}
+
+void Backroom::Shield(bool b)
+{
+    ;
+}
+
+void Backroom::Redraw(const RedrawEvent & e)
+{
+    int size = e.subset_height * e.pitch +
+        sizeof(PipePaintEvent) + sizeof(PipeMsgHeader);
+    AdjustCache(size);
+    PipeMsgHeader * head = reinterpret_cast<PipeMsgHeader*>(cache_->data());
+    PipePaintEvent * body = reinterpret_cast<PipePaintEvent *>(head + 1);
+    char * bits = reinterpret_cast<char *>(body + 1);
+
+    head->type = kPaintEvent;
+    body->left = e.subset_left;
+    body->top = e.subset_top;
+    body->width = e.subset_width;
+    body->height = e.subset_height;
+    //一行行的复制图像数据
+    size_t body_pitch = body->width * 4;
+    for (size_t i = 0; i < e.subset_height; ++i)
+    {
+        char * src = reinterpret_cast<char *>(e.bits) + 
+            body->left + (body->top + i) * e.pitch;
+        memcpy(bits + i * body_pitch, src, body_pitch);
+    }
+    Push(cache_->data(), size);
+}
+
+size_t Backroom::GetWidth()
+{
+    return width_;
+}
+
+size_t Backroom::GetHeight()
+{
+    return height_;
+}
+
+
+void Backroom::OnHotKey()
+{
+    for (auto iter = plugins_.begin(); iter != plugins_.end(); ++iter)
+        (iter->OnHotKey)(*this);
+}
+
+void Backroom::OnMouseEvent(PipeMouseEvent & pe)
+{
+    MouseEvent e;
+    memcpy(&e, &pe, sizeof(e));
+
+    for (auto iter = plugins_.begin(); iter != plugins_.end(); ++iter)
+        (iter->OnMouseEvent)(*this, e);
+}
+
+void Backroom::OnKeyEvent(PipeKeyEvent & pe)
+{
+    KeyEvent e;
+    memcpy(&e, &pe, sizeof(e));
+    for (auto iter = plugins_.begin(); iter != plugins_.end(); ++iter)
+        (iter->OnKeyEvent)(*this, e);
 }
 
 uint32_t Backroom::OnIdle(ncore::MessageLoop & loop)
 {
     using namespace ncore;
     //接收管道消息
-    if (!PipeAgent::Get()->Update())
+    if (!Update())
         MessageLoop::Current()->Exit(kErrorPipe);
-
-    PushPixmap();
+    for (auto iter = plugins_.begin(); iter != plugins_.end(); ++iter)
+        (iter->OnIdle)(*this);
     return 30;
 }
 
-void Backroom::PenddingRedraw(nui::ScopedWorld world, const nui::Rect & rect)
+void Backroom::AdjustCache(size_t size)
 {
-    inval_rect_.Union(rect);
-}
-
-void Backroom::SetCursor(nui::ScopedWorld world, nui::CursorStyles cursor)
-{
-    ;
-}
-
-bool Backroom::InitView(int width, int height)
-{
-    using namespace nui;
-    using namespace ncore;
-    world_ = new GadgetWorld(this);
-    back_buffer_ = Pixmap::Alloc(Size::Make(width, height));
-    raw_buffer_ = new Buffer();
-    //初始化其他View
-    assert(0);
-    //layout
-    return world_ != nullptr && back_buffer_.IsEmpty();
-}
-
-void Backroom::FiniView()
-{
-    using namespace nui;
-    delete raw_buffer_;
-    back_buffer_ = Pixmap();
-    world_.Reset();
-}
-
-void Backroom::PushPixmap()
-{
-    using namespace nui;
-    if (inval_rect_.isEmpty())
-        return;
-    PixPainter painter(back_buffer_);
-    world_->Draw(painter, inval_rect_);
-    
-    inval_rect_.SetEmpty();
+    if (!cache_ || cache_->capacity() < size)
+    {
+        if (cache_)
+            delete cache_;
+        cache_ = new ncore::Buffer(size);
+    }
+    assert(cache_ && cache_->capacity() >= size);
 }
 
 }

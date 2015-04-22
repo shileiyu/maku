@@ -10,10 +10,25 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="test\main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="maku_plugin.vcxproj">
+      <Project>{ef5d6a1b-720a-40bc-8b2c-d5894e35c1a1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="maku_render.vcxproj">
+      <Project>{821d91f4-b562-478b-90e3-0db7c7f48216}</Project>
+    </ProjectReference>
+    <ProjectReference Include="maku_ui.vcxproj">
+      <Project>{dda1b7cf-864d-4294-8d60-5701ea4074c4}</Project>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{DDA1B7CF-864D-4294-8D60-5701EA4074C4}</ProjectGuid>
+    <ProjectGuid>{688430A9-E239-4730-89B7-ACF5EF7DDCB8}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>maku_ui</RootNamespace>
+    <RootNamespace>demo</RootNamespace>
+    <ProjectName>test</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -41,9 +56,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)maku;$(SolutionDir)ncore;$(IncludePath)</IncludePath>
     <OutDir>$(SolutionDir)out\$(Configuration)\</OutDir>
-    <IntDir>$(SolutionDir)build\maku_ui\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)build\demo\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -59,7 +73,11 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d11.lib;D3DCompiler.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(ProjectDir)test\Tutorial04.fx $(OutDir)</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -78,24 +96,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="maku\common\pipe_shell.cpp" />
-    <ClCompile Include="maku\ui\main.cpp" />
-    <ClCompile Include="maku\ui\backroom.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="maku\common\key_event.h" />
-    <ClInclude Include="maku\common\mouse_event.h" />
-    <ClInclude Include="maku\common\pipe_msg_def.h" />
-    <ClInclude Include="maku\common\pipe_shell.h" />
-    <ClInclude Include="maku\ui\backroom.h" />
-    <ClInclude Include="maku\ui\plugin.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="ncore\ncore.vcxproj">
-      <Project>{4e2aa223-399c-4386-9dee-fcef2caaadff}</Project>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,11 +1,16 @@
 ﻿#ifndef MAKU_UI_BACKROOM_H_
 #define MAKU_UI_BACKROOM_H_
 
+#include "plugin.h"
+#include <common/pipe_shell.h>
 #include <ncore/sys/message_loop.h>
-#include <ncore/base/buffer.h>
-#include <nui/gadget/world.h>
-#include <nui/base/pixmap.h>
-#include <nui/base/rect.h>
+
+
+namespace ncore
+{
+class NamedPipeClient;
+class Buffer;
+}
 
 namespace maku
 {
@@ -18,11 +23,18 @@ enum ErrorCode
     kGeneralFailure = -1,
     kInvalidParams = -2,
     kErrorPipe = -3,
+    kErrorPlugin = -4,
 };
 
-class Backroom : public ncore::MessageLoop::Observer,
-                 public nui::GadgetWorldClient
+class Backroom : public ncore::MessageLoop::Observer, public Controller, public PipeShell
 {
+    typedef void(__cdecl *CF)(Controller &);
+    struct ModuleInfo
+    {
+        HMODULE module;
+        CF load;
+        CF unload;
+    };
 public:
     static Backroom * Get();
     
@@ -34,21 +46,39 @@ public:
 
 protected:
     uint32_t OnIdle(ncore::MessageLoop & loop) override;
-
-    void PenddingRedraw(nui::ScopedWorld world, const nui::Rect & rect) override;
-
-    void SetCursor(nui::ScopedWorld world, nui::CursorStyles cursor) override;
 private:
-    bool InitView(int width, int height);
+    bool Update();
 
-    void FiniView();
+    void LoadPlugin();
 
-    void PushPixmap();
+    void UnloadPlugin();
+
+    void Show(bool b) override;
+
+    void Shield(bool b) override;
+
+    void Redraw(const RedrawEvent & e) override;
+
+    size_t GetWidth() override;
+
+    size_t GetHeight() override;
+
+    void OnHotKey() override;
+
+    void OnMouseEvent(PipeMouseEvent & e) override;
+
+    void OnKeyEvent(PipeKeyEvent & e) override;
+
+    //void OnTextEvent(PipeTextEvent & e) override;
 private:
-    nui::ScopedWorld world_;
-    nui::Pixmap back_buffer_;
-    nui::Rect inval_rect_;
-    ncore::Buffer * raw_buffer_;
+    void AdjustCache(size_t size);
+private:
+    ncore::NamedPipeClient * client_;
+    std::vector<ModuleInfo> infos_;
+    std::vector<Plugin> plugins_;
+    size_t width_;
+    size_t height_;
+    ncore::Buffer * cache_;
 };
 
 }

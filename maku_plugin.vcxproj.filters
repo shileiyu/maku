@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="maku\plugin\main.cpp" />
+    <ClCompile Include="maku\plugin\demo.cpp" />
+    <ClCompile Include="maku\plugin\welcome.cpp">
+      <Filter>control\welcome</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="maku\plugin\demo.h" />
+    <ClInclude Include="maku\plugin\welcome.h">
+      <Filter>control\welcome</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="control">
+      <UniqueIdentifier>{557b19f6-0fff-493f-9b73-4b705f6c46b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="control\welcome">
+      <UniqueIdentifier>{8adf8290-8cbf-47d9-a517-f66cc96e0f96}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

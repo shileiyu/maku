@@ -72,7 +72,7 @@ private:
 
     uint32_t cur_frame_count_;
     ncore::Buffer image_buf_;
-    ncore::FixedBuffer<sizeof(CursorChangedEvent)> cursor_buf_;
+    ncore::FixedBuffer<sizeof(PipeCursorChangedEvent)> cursor_buf_;
     Point cursor_pos_;
 
     uint32_t width_;
