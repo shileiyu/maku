@@ -53,9 +53,7 @@ private:
 
     void UnloadPlugin();
 
-    void Show(bool b) override;
-
-    void Shield(bool b) override;
+    void Display(bool show, bool shield) override;
 
     void Redraw(const RedrawEvent & e) override;
 

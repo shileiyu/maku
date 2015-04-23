@@ -40,9 +40,7 @@ struct RedrawEvent
 class Controller
 {
 public:
-    virtual void Show(bool b) = 0;
-
-    virtual void Shield(bool b) = 0;
+    virtual void Display(bool show, bool shield) = 0;
 
     virtual void Redraw(const RedrawEvent & e) = 0;
 

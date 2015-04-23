@@ -124,14 +124,16 @@ void Backroom::UnloadPlugin()
     infos_.clear();
 }
 
-void Backroom::Show(bool b)
+void Backroom::Display(bool show, bool shield)
 {
-    ;
-}
-
-void Backroom::Shield(bool b)
-{
-    ;
+    int size = sizeof(PipeStatusChangedEvent)+sizeof(PipeMsgHeader);
+    AdjustCache(size);
+    PipeMsgHeader * head = reinterpret_cast<PipeMsgHeader*>(cache_->data());
+    head->type = kStatusChangedEvent;
+    PipeStatusChangedEvent * body = reinterpret_cast<PipeStatusChangedEvent *>(head + 1);
+    body->show = show;
+    body->shield = shield;
+    Push(cache_->data(), size);
 }
 
 void Backroom::Redraw(const RedrawEvent & e)
@@ -140,6 +142,7 @@ void Backroom::Redraw(const RedrawEvent & e)
         sizeof(PipePaintEvent) + sizeof(PipeMsgHeader);
     AdjustCache(size);
     PipeMsgHeader * head = reinterpret_cast<PipeMsgHeader*>(cache_->data());
+    head->type = kPaintEvent;
     PipePaintEvent * body = reinterpret_cast<PipePaintEvent *>(head + 1);
     char * bits = reinterpret_cast<char *>(body + 1);
 

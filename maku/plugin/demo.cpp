@@ -7,6 +7,9 @@ namespace maku
 
 namespace ui
 {
+static const uint32_t kAnimationTime = 1000;
+static const nui::Color kHotKeyColor = nui::Color(192, 0, 0, 0);
+static const nui::Color kPopupColor = nui::Color(0, 0, 0, 0);
 
 PluginView * PluginView::Get()
 {
@@ -18,7 +21,7 @@ PluginView * PluginView::Get()
 }
 
 PluginView::PluginView()
-:controller_(nullptr), show_(false), welcome_(false)
+:controller_(nullptr), show_(false), welcome_(false), welcoming_(false), hotkey_(false)
 {
     ;
 }
@@ -50,31 +53,67 @@ bool PluginView::InitNui()
     auto height = controller_->GetHeight();
     auto pitch = width * 4;//argb
     back_buffer_ = Pixmap::Alloc(width, height);
-    world_ = new GadgetWorld(this);
+    world_ = new World(this);
     world_->SetSize(Size::Make(width, height));
-   
+    background_->SetSize(Size::Make(width, height));
+    world_->AddChild(background_);
 
     //logo 大小固定 水平居中
     auto logo_gadget = logo_.GetGadget();
-    logo_gadget->SetSize(Size::Make(300, 30));
+    logo_gadget->SetSize(Size::Make(300, 40));
     logo_gadget->SetLoc(Point::Make((width - 300) / 2, 0));
     logo_gadget->SetVisible(false);
     world_->AddChild(logo_gadget);
     //排版
     world_->Layout();
+    welcome_ = true;
     return true;
 }
 
 void PluginView::FiniNui()
 {
-    ;
+    //lazy
 }
 
 void PluginView::PopupWelcome()
 {
-    //logo_.GetGadget()->SetLoc(Point::Make());
-    //logo_.GetGadget()->SetVisible(true);
-    //welcome_ = true;
+    using namespace nui;
+    
+    if (welcome_)
+    {
+        auto gadget = logo_.GetGadget();
+        gadget->SetTop(-gadget->GetHeight());
+        gadget->SetVisible(true);
+        welcome_ = false;
+        welcoming_ = true;
+        watch_.Start();
+        background_->SetBackground(hotkey_ ? kHotKeyColor : kPopupColor);
+        controller_->Display(welcoming_ || hotkey_, hotkey_);
+    }
+    if (welcoming_)
+    {
+        auto gadget = logo_.GetGadget();
+        float interval = static_cast<float>(watch_.ElapsedTime());
+        auto height = gadget->GetHeight();
+        float distance = interval / kAnimationTime * height;
+        int idistance = static_cast<int>(distance);
+        if (idistance <= height)
+        {//welcome下降
+            gadget->SetTop(-height + idistance);
+        }
+        else if ( (idistance -= height) <= height )
+        {//welcome上升
+            gadget->SetTop(-idistance);
+        }
+        else
+        {//welcome结束
+            welcoming_ = false;
+            gadget->SetTop(-height);
+            gadget->SetVisible(false);
+            watch_.Stop();
+            controller_->Display(welcoming_ || hotkey_, hotkey_);
+        }
+    }
 }
 
 void PluginView::PenddingRedraw(nui::ScopedWorld world, const nui::Rect & rect)
@@ -89,8 +128,8 @@ void PluginView::SetCursor(nui::ScopedWorld world, nui::CursorStyles cursor)
 
 void PluginView::OnHotKey(Controller & controller)
 {
-    if (!welcome_)
-        controller_->Show(!show_);
+    hotkey_ = !hotkey_;
+    controller_->Display(welcoming_ || hotkey_, hotkey_);
 }
 
 void PluginView::OnMouseEvent(Controller & controller, const MouseEvent & e)

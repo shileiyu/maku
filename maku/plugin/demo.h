@@ -1,6 +1,7 @@
 ﻿#ifndef MAKU_PLUGIN_DEMO_H_
 #define MAKU_PLUGIN_DEMO_H_
 
+#include <ncore/sys/stop_watch.h>
 #include <ui/plugin.h>
 #include <nui/base/pixmap.h>
 #include <nui/gadget/world.h>
@@ -11,7 +12,7 @@ namespace maku
 namespace ui
 {
 
-class PluginView : public Plugin, public nui::GadgetWorldClient
+class PluginView : public Plugin, public nui::WorldClient
 {
 public:
     static PluginView * Get();
@@ -45,10 +46,14 @@ private:
     Controller * controller_;
     bool show_;
     bool welcome_;
+    bool welcoming_;
     nui::Pixmap back_buffer_;
     nui::ScopedWorld world_;
     nui::Rect inval_rect_;
     Welcome logo_;
+    ncore::StopWatch watch_;
+    bool hotkey_;
+    nui::ScopedPicture background_;
 };
 
 }
