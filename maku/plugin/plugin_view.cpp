@@ -11,8 +11,8 @@ namespace maku
 namespace ui
 {
 static const uint32_t kAnimationTime = 2000;
-static const nui::Color kHotKeyColor = nui::Color(192, 0, 0, 0);
-static const nui::Color kPopupColor = nui::Color(0, 0, 0, 0);
+static const nui::Color kHotKeyColor = 0xc0000000;
+static const nui::Color kPopupColor = 0;
 
 PluginView * PluginView::Get()
 {
@@ -147,7 +147,7 @@ void PluginView::OnIdle(Controller & controller)
 
 void PluginView::Display()
 {
-    background_->SetBackground(hotkey_ ? kHotKeyColor : kPopupColor);
+    background_->Set(hotkey_ ? kHotKeyColor : kPopupColor);
     controller_->Display(welcoming_ || hotkey_, hotkey_);
 }
 
