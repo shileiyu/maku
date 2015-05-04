@@ -6,12 +6,18 @@
       <Filter>control\welcome</Filter>
     </ClCompile>
     <ClCompile Include="maku\plugin\plugin_view.cpp" />
+    <ClCompile Include="maku\plugin\ladder.cpp">
+      <Filter>animation</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="maku\plugin\welcome.h">
       <Filter>control\welcome</Filter>
     </ClInclude>
     <ClInclude Include="maku\plugin\plugin_view.h" />
+    <ClInclude Include="maku\plugin\ladder.h">
+      <Filter>animation</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="control">
@@ -19,6 +25,9 @@
     </Filter>
     <Filter Include="control\welcome">
       <UniqueIdentifier>{8adf8290-8cbf-47d9-a517-f66cc96e0f96}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="animation">
+      <UniqueIdentifier>{40134eb2-215e-4266-9df7-328a5921c9ed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

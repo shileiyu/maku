@@ -7,6 +7,7 @@
 #include <nui/gadget/world.h>
 
 #include "welcome.h"
+#include "ladder.h"
 
 namespace maku
 {
@@ -58,6 +59,7 @@ private:
     ncore::StopWatch watch_;
     bool hotkey_;
     nui::ScopedPicture background_;
+    Ladder ladder_;
 };
 
 }

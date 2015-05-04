@@ -84,6 +84,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="maku\plugin\ladder.cpp" />
     <ClCompile Include="maku\plugin\plugin_view.cpp" />
     <ClCompile Include="maku\plugin\main.cpp" />
     <ClCompile Include="maku\plugin\welcome.cpp" />
@@ -97,6 +98,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="maku\plugin\ladder.h" />
     <ClInclude Include="maku\plugin\plugin_view.h" />
     <ClInclude Include="maku\plugin\welcome.h" />
   </ItemGroup>

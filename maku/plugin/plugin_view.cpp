@@ -10,7 +10,7 @@ namespace maku
 
 namespace ui
 {
-static const uint32_t kAnimationTime = 1000;
+static const uint32_t kAnimationTime = 2000;
 static const nui::Color kHotKeyColor = nui::Color(192, 0, 0, 0);
 static const nui::Color kPopupColor = nui::Color(0, 0, 0, 0);
 
@@ -89,6 +89,7 @@ void PluginView::PopupWelcome()
         gadget->SetVisible(true);
         welcome_ = false;
         welcoming_ = true;
+        ladder_.Reset(-gadget->GetHeight(), 0, kAnimationTime, kAnimationTime);
         watch_.Start();
         Display();
     }
@@ -96,29 +97,17 @@ void PluginView::PopupWelcome()
     if (welcoming_)
     {
         auto gadget = logo_.GetGadget();
-        float interval = static_cast<float>(watch_.ElapsedTime());
-        auto height = gadget->GetHeight();
-        float distance = interval / kAnimationTime * height;
-        int idistance = static_cast<int>(distance);
-        if (idistance <= height)
-        {//welcome下降
-            gadget->SetTop(-height + idistance);
-        }
-        else if ( idistance <= 2 * height )
-        {//welcome上升
-            gadget->SetTop(-idistance + height);
-        }
-        else
-        {//welcome结束
+        auto time = watch_.ElapsedTime();
+        int top = ladder_.GetValue(time);
+        gadget->SetTop(top);
+        if (time >= kAnimationTime * 3)
+        {//动画终止 welcome结束
             welcoming_ = false;
-            gadget->SetTop(-height);
             gadget->SetVisible(false);
             watch_.Stop();
             Display();
         }
     }
-
-
 }
 
 void PluginView::PenddingRedraw(nui::ScopedWorld world, const nui::Rect & rect)
