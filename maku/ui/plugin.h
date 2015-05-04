@@ -25,21 +25,26 @@ struct KeyEvent
     uint32_t value;
 };
 
-struct RedrawEvent
+struct RedrawEvent//argb
 {
     void * bits;
     size_t width;
     size_t height;
-    size_t pitch;
     size_t subset_left;
     size_t subset_top;
     size_t subset_width;
     size_t subset_height;
 };
 
+class Watcher;
+
 class Controller
 {
 public:
+    virtual void AddWatcher(Watcher * ob) = 0;
+
+    virtual void RemoveWatcher(Watcher * ob) = 0;
+
     virtual void Display(bool show, bool shield) = 0;
 
     virtual void Redraw(const RedrawEvent & e) = 0;
@@ -49,7 +54,7 @@ public:
     virtual size_t GetHeight() = 0;
 };
 
-class Plugin
+class Watcher
 {
 public:
     virtual void OnHotKey(Controller & controller) = 0;//热键按下

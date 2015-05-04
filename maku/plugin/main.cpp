@@ -1,5 +1,5 @@
 ﻿#include <ncore/ncore.h>
-#include "demo.h"
+#include "plugin_view.h"
 
 using namespace maku::ui;
 

@@ -5,6 +5,7 @@
 #include <ui/plugin.h>
 #include <nui/base/pixmap.h>
 #include <nui/gadget/world.h>
+
 #include "welcome.h"
 
 namespace maku
@@ -12,7 +13,8 @@ namespace maku
 namespace ui
 {
 
-class PluginView : public Plugin, public nui::WorldClient
+class PluginView : public Watcher, 
+                   public nui::WorldClient
 {
 public:
     static PluginView * Get();
@@ -38,10 +40,12 @@ private:
     bool InitNui();
 
     void FiniNui();
-private:
+
     void PopupWelcome();
 
     void UpdatePixmap();
+
+    void Display();
 private:
     Controller * controller_;
     bool show_;

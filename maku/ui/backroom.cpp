@@ -9,20 +9,11 @@ namespace maku
 namespace ui
 {
 
-int ParseInteger(const std::string & litera, int _default, int min, int max)
-{
-    if (litera.length() == 0)
-        return _default;
-    int value = atoi(litera.data());
-    if (value < min || value > max)
-        return _default;
-    return value;
-}
 
-int ParseInteger(const std::string & litera, int _default)
+int ParseInteger(const std::string & litera)
 {
     if (litera.length() == 0)
-        return _default;
+        return 0;
     return atoi(litera.data());
 }
 
@@ -45,19 +36,18 @@ Backroom::~Backroom()
     ;
 }
 
-
 ErrorCode Backroom::Run()
 {
     using namespace ncore;
     auto cmdline = Karma::ToUTF8(::GetCommandLine());
     OptionsParser options_parser(cmdline);
     auto options = options_parser.GetOptions();
-    width_ = ParseInteger(options["width"], 800);
-    height_ = ParseInteger(options["height"], 600);
-    int flag = ParseInteger(options["flag"], 0);
+    width_ = ParseInteger(options["width"]);
+    height_ = ParseInteger(options["height"]);
+    int flag = ParseInteger(options["flag"]);
+    if (width_ == 0 || height_ == 0)
+        return kInvalidParams;
 
-    //nui initialize
-    //SkGraphics::Init()
     //初始化管道通信
     char pipename[MAX_PATH] = { 0 };
     sprintf_s(pipename, "%s%u", kPipeName, flag);
@@ -74,8 +64,6 @@ ErrorCode Backroom::Run()
     client_->fini();
     delete client_;
     pipe_obj_ = client_ = nullptr;
-    //nui uninitialize
-    //SkGraphics::Term();
     return ErrorCode::kErrorSuccess;
 }
 
@@ -99,11 +87,13 @@ void Backroom::LoadPlugin()
         if (!(fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
         {
             ModuleInfo info;
-            info.module = LoadLibrary(fd.cFileName);
+            info.module = ::LoadLibrary(fd.cFileName);
             info.load = (CF)GetProcAddress(info.module, "Load");
             info.unload = (CF)GetProcAddress(info.module, "Unload");
             if (info.module && info.load && info.unload)
                 infos_.push_back(info);
+            else
+                ::FreeLibrary(info.module);
         }
 
     } while (::FindNextFile(file, &fd));
@@ -116,12 +106,22 @@ void Backroom::LoadPlugin()
 
 void Backroom::UnloadPlugin()
 {
-    for (auto iter = infos_.begin(); iter != infos_.end(); ++iter)
+    for (auto iter = infos_.rbegin(); iter != infos_.rend(); ++iter)
     {
         iter->unload(*this);
         FreeLibrary(iter->module);
     }
     infos_.clear();
+}
+
+void Backroom::AddWatcher(Watcher * ob)
+{
+    plugins_.insert(ob);
+}
+
+void Backroom::RemoveWatcher(Watcher * ob)
+{
+    plugins_.erase(ob);
 }
 
 void Backroom::Display(bool show, bool shield)
@@ -138,7 +138,9 @@ void Backroom::Display(bool show, bool shield)
 
 void Backroom::Redraw(const RedrawEvent & e)
 {
-    int size = e.subset_height * e.pitch +
+    auto subset_pitch = e.subset_width * 4;
+    auto pitch = e.width * 4;
+    int size = e.subset_height *  subset_pitch +
         sizeof(PipePaintEvent) + sizeof(PipeMsgHeader);
     AdjustCache(size);
     PipeMsgHeader * head = reinterpret_cast<PipeMsgHeader*>(cache_->data());
@@ -152,12 +154,11 @@ void Backroom::Redraw(const RedrawEvent & e)
     body->width = e.subset_width;
     body->height = e.subset_height;
     //一行行的复制图像数据
-    size_t body_pitch = body->width * 4;
     for (size_t i = 0; i < e.subset_height; ++i)
     {
         char * src = reinterpret_cast<char *>(e.bits) + 
-            body->left + (body->top + i) * e.pitch;
-        memcpy(bits + i * body_pitch, src, body_pitch);
+            body->left * 4 + (body->top + i) * pitch;
+        memcpy(bits + i * subset_pitch, src, subset_pitch);
     }
     Push(cache_->data(), size);
 }
@@ -176,7 +177,7 @@ size_t Backroom::GetHeight()
 void Backroom::OnHotKey()
 {
     for (auto iter = plugins_.begin(); iter != plugins_.end(); ++iter)
-        (iter->OnHotKey)(*this);
+        ((*iter)->OnHotKey)(*this);
 }
 
 void Backroom::OnMouseEvent(PipeMouseEvent & pe)
@@ -185,7 +186,7 @@ void Backroom::OnMouseEvent(PipeMouseEvent & pe)
     memcpy(&e, &pe, sizeof(e));
 
     for (auto iter = plugins_.begin(); iter != plugins_.end(); ++iter)
-        (iter->OnMouseEvent)(*this, e);
+        ((*iter)->OnMouseEvent)(*this, e);
 }
 
 void Backroom::OnKeyEvent(PipeKeyEvent & pe)
@@ -193,7 +194,7 @@ void Backroom::OnKeyEvent(PipeKeyEvent & pe)
     KeyEvent e;
     memcpy(&e, &pe, sizeof(e));
     for (auto iter = plugins_.begin(); iter != plugins_.end(); ++iter)
-        (iter->OnKeyEvent)(*this, e);
+        ((*iter)->OnKeyEvent)(*this, e);
 }
 
 uint32_t Backroom::OnIdle(ncore::MessageLoop & loop)
@@ -203,7 +204,7 @@ uint32_t Backroom::OnIdle(ncore::MessageLoop & loop)
     if (!Update())
         MessageLoop::Current()->Exit(kErrorPipe);
     for (auto iter = plugins_.begin(); iter != plugins_.end(); ++iter)
-        (iter->OnIdle)(*this);
+        ((*iter)->OnIdle)(*this);
     return 30;
 }
 

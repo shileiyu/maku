@@ -57,7 +57,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
     //assert(0);
     typedef void(__cdecl *CF)(const wchar_t * dir);
     auto module = ::LoadLibrary(L"maku_render.dll");
-    auto api = (CF)::GetProcAddress(module, "_SetWorkDirectory@4");
+    auto api = (CF)::GetProcAddress(module, "SetWorkDirectory");
     (*api)(work_dir.data());
 #endif
     if (FAILED(InitWindow(hInstance, nCmdShow)))

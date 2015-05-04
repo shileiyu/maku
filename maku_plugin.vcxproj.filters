@@ -2,16 +2,16 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="maku\plugin\main.cpp" />
-    <ClCompile Include="maku\plugin\demo.cpp" />
     <ClCompile Include="maku\plugin\welcome.cpp">
       <Filter>control\welcome</Filter>
     </ClCompile>
+    <ClCompile Include="maku\plugin\plugin_view.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="maku\plugin\demo.h" />
     <ClInclude Include="maku\plugin\welcome.h">
       <Filter>control\welcome</Filter>
     </ClInclude>
+    <ClInclude Include="maku\plugin\plugin_view.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="control">

@@ -17,6 +17,8 @@ public:
     ~Welcome();
 
     nui::ScopedGadget GetGadget();
+
+    nui::ScopedPicture Background(){ return background_; }
 private:
     nui::ScopedPicture background_;
     nui::ScopedPicture logo_;

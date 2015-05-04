@@ -60,7 +60,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>usp10.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>usp10.lib;dwmapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>
       </ModuleDefinitionFile>
     </Link>
@@ -84,7 +84,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="maku\plugin\demo.cpp" />
+    <ClCompile Include="maku\plugin\plugin_view.cpp" />
     <ClCompile Include="maku\plugin\main.cpp" />
     <ClCompile Include="maku\plugin\welcome.cpp" />
   </ItemGroup>
@@ -97,7 +97,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="maku\plugin\demo.h" />
+    <ClInclude Include="maku\plugin\plugin_view.h" />
     <ClInclude Include="maku\plugin\welcome.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

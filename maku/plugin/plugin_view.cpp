@@ -1,6 +1,9 @@
-﻿#include "demo.h"
+﻿#include "plugin_view.h"
 #include <nui/base/pixpainter.h>
 #include <ncore/base/buffer.h>
+#include <nui/gadget/picture.h>
+#include <nui/winnt/workspace.h>
+#include <nui/winnt/utils.h>
 
 namespace maku
 {
@@ -29,6 +32,7 @@ PluginView::PluginView()
 void PluginView::Load(Controller & controller)
 {
     controller_ = &controller;
+    controller_->AddWatcher(this);
     //载入 
     //初始化
     //skia initialize
@@ -44,6 +48,7 @@ void PluginView::Unload(Controller & controller)
     FiniNui();
     //skia uninitialize
     //SkGraphics::Term();
+    controller_->RemoveWatcher(this);
 }
 
 bool PluginView::InitNui()
@@ -51,10 +56,10 @@ bool PluginView::InitNui()
     using namespace nui;
     auto width = controller_->GetWidth();
     auto height = controller_->GetHeight();
-    auto pitch = width * 4;//argb
     back_buffer_ = Pixmap::Alloc(width, height);
     world_ = new World(this);
     world_->SetSize(Size::Make(width, height));
+    background_ = new Picture;
     background_->SetSize(Size::Make(width, height));
     world_->AddChild(background_);
 
@@ -66,7 +71,6 @@ bool PluginView::InitNui()
     world_->AddChild(logo_gadget);
     //排版
     world_->Layout();
-    welcome_ = true;
     return true;
 }
 
@@ -78,18 +82,17 @@ void PluginView::FiniNui()
 void PluginView::PopupWelcome()
 {
     using namespace nui;
-    
+
     if (welcome_)
     {
         auto gadget = logo_.GetGadget();
-        gadget->SetTop(-gadget->GetHeight());
         gadget->SetVisible(true);
         welcome_ = false;
         welcoming_ = true;
         watch_.Start();
-        background_->SetBackground(hotkey_ ? kHotKeyColor : kPopupColor);
-        controller_->Display(welcoming_ || hotkey_, hotkey_);
+        Display();
     }
+
     if (welcoming_)
     {
         auto gadget = logo_.GetGadget();
@@ -101,9 +104,9 @@ void PluginView::PopupWelcome()
         {//welcome下降
             gadget->SetTop(-height + idistance);
         }
-        else if ( (idistance -= height) <= height )
+        else if ( idistance <= 2 * height )
         {//welcome上升
-            gadget->SetTop(-idistance);
+            gadget->SetTop(-idistance + height);
         }
         else
         {//welcome结束
@@ -111,9 +114,11 @@ void PluginView::PopupWelcome()
             gadget->SetTop(-height);
             gadget->SetVisible(false);
             watch_.Stop();
-            controller_->Display(welcoming_ || hotkey_, hotkey_);
+            Display();
         }
     }
+
+
 }
 
 void PluginView::PenddingRedraw(nui::ScopedWorld world, const nui::Rect & rect)
@@ -129,7 +134,7 @@ void PluginView::SetCursor(nui::ScopedWorld world, nui::CursorStyles cursor)
 void PluginView::OnHotKey(Controller & controller)
 {
     hotkey_ = !hotkey_;
-    controller_->Display(welcoming_ || hotkey_, hotkey_);
+    Display();
 }
 
 void PluginView::OnMouseEvent(Controller & controller, const MouseEvent & e)
@@ -151,13 +156,25 @@ void PluginView::OnIdle(Controller & controller)
 
 }
 
+void PluginView::Display()
+{
+    background_->SetBackground(hotkey_ ? kHotKeyColor : kPopupColor);
+    controller_->Display(welcoming_ || hotkey_, hotkey_);
+}
+
 void PluginView::UpdatePixmap()
 {
     using namespace nui;
     if (inval_rect_.isEmpty())
         return;
+    inval_rect_.Intersect(Rect::Make(0, 0, world_->GetWidth(), world_->GetHeight()));
+    if (inval_rect_.isEmpty())
+        return;
     PixPainter painter(back_buffer_);
-    world_->Draw(painter, inval_rect_);
+    Rect tmp(inval_rect_);
+    inval_rect_.SetEmpty();
+
+    world_->Draw(painter, tmp);
     //发送到render中去
     PixStorage::Outline ol;
     Rect subset;
@@ -167,18 +184,15 @@ void PluginView::UpdatePixmap()
     pe.bits = ol.bits;
     pe.width = ol.width;
     pe.height = ol.height;
-    pe.pitch = ol.pitch;
 
-    pe.subset_left = inval_rect_.left();
-    pe.subset_top = inval_rect_.top();
-    pe.subset_width = inval_rect_.width();
-    pe.subset_height = inval_rect_.height();
+    pe.subset_left = tmp.left();
+    pe.subset_top = tmp.top();
+    pe.subset_width = tmp.width();
+    pe.subset_height = tmp.height();
 
     controller_->Redraw(pe);
 
     back_buffer_.Unlock();
-
-    inval_rect_.SetEmpty();
 }
 
 

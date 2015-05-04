@@ -4,7 +4,7 @@
 #include "plugin.h"
 #include <common/pipe_shell.h>
 #include <ncore/sys/message_loop.h>
-
+#include <set>
 
 namespace ncore
 {
@@ -53,6 +53,10 @@ private:
 
     void UnloadPlugin();
 
+    void AddWatcher(Watcher * ob);
+
+    void RemoveWatcher(Watcher * ob);
+
     void Display(bool show, bool shield) override;
 
     void Redraw(const RedrawEvent & e) override;
@@ -73,7 +77,7 @@ private:
 private:
     ncore::NamedPipeClient * client_;
     std::vector<ModuleInfo> infos_;
-    std::vector<Plugin> plugins_;
+    std::set<Watcher *> plugins_;
     size_t width_;
     size_t height_;
     ncore::Buffer * cache_;
